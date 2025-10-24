@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title} ?: 'Shop'">Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<header class="bg-white shadow sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <a href="/products" class="text-xl font-bold">MyShop</a>
+            <nav class="hidden sm:flex items-center gap-3 text-sm">
+                <a href="/products" class="hover:underline">Sản phẩm</a>
+                <a href="/orders/new" class="hover:underline" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">Tạo đơn hàng</a>
+                <a href="/orders" class="hover:underline" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">Đơn hàng</a>
+                <a href="/customers" class="hover:underline" sec:authorize="hasRole('ADMIN')">Khách hàng</a>
+                <a href="/profile" class="hover:underline" sec:authorize="isAuthenticated()">Hồ sơ</a>
+            </nav>
+        </div>
+        <div class="flex-1"></div>
+        <form th:action="@{/products}" method="get" class="hidden md:flex gap-2">
+            <input name="q" th:value="${q}" placeholder="Tìm sản phẩm..." class="border rounded px-3 py-2"/>
+            <button class="px-4 py-2 bg-black text-white rounded">Tìm</button>
+        </form>
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-600" sec:authorize="isAuthenticated()">
+                Xin chào, <span sec:authentication="name">user</span>
+            </span>
+            <a href="/login" class="px-3 py-2 border rounded" sec:authorize="isAnonymous()">Đăng nhập</a>
+            <a href="/register" class="px-3 py-2 border rounded" sec:authorize="isAnonymous()">Đăng ký</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button class="px-3 py-2 border rounded">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-6" th:insert="${content}"></main>
+
+<footer class="text-center text-sm text-gray-500 py-8">© 2025 MyShop</footer>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <div class="mb-6 flex items-start justify-between gap-6">
+        <div>
+            <h1 class="text-2xl font-bold" th:text="${product.name}">Tên SP</h1>
+            <p class="text-gray-600 mt-1">
+                Giá: <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
+            </p>
+            <div class="mt-1">
+                <span th:classappend="${product.inStock} ? 'text-green-600' : 'text-red-600'"
+                      th:text="${product.inStock} ? 'Còn hàng' : 'Hết hàng'"></span>
+                <span class="ml-2 text-gray-500">SL tồn: <span th:text="${product.stock} ?: 0">0</span></span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="/products" class="px-4 py-2 bg-gray-200 rounded-xl">← Quay lại</a>
+            <a th:href="@{'/orders/new'(productId=${product.id})}" class="px-4 py-2 bg-blue-600 text-white rounded-xl"
+               xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
+                Mua sản phẩm này
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Danh sách bình luận -->
+        <div class="md:col-span-2">
+            <h2 class="font-semibold mb-3">Bình luận</h2>
+
+            <div class="space-y-3" th:if="${#lists.isEmpty(product.comments)}">
+                <p class="text-gray-500">Chưa có bình luận nào.</p>
+            </div>
+            <div class="space-y-3" th:if="${!#lists.isEmpty(product.comments)}">
+                <div class="bg-white rounded-xl shadow p-4" th:each="c : ${product.comments}">
+                    <p class="whitespace-pre-line" th:text="${c.text}">Nội dung comment</p>
+
+                    <div class="mt-3 flex gap-2" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
+                        <a th:href="@{'/comments/' + ${c.id} + '/edit'}"
+                           class="px-3 py-1 rounded border">Sửa</a>
+
+                        <form th:action="@{'/comments/' + ${c.id} + '/delete'}" method="post"
+                              onsubmit="return confirm('Xoá bình luận này?');">
+                            <button class="px-3 py-1 rounded border border-red-600 text-red-600">Xoá</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Form thêm bình luận -->
+        <div>
+            <h2 class="font-semibold mb-3">Thêm bình luận</h2>
+            <div th:if="${success}" class="mb-3 text-green-700 bg-green-50 border border-green-200 rounded p-3"
+                 th:text="${success}"></div>
+            <div th:if="${error}" class="mb-3 text-red-700 bg-red-50 border border-red-200 rounded p-3"
+                 th:text="${error}"></div>
+
+            <form th:action="@{'/products/' + ${product.id} + '/comments'}" method="post"
+                  class="bg-white rounded-xl shadow p-4 space-y-3"
+                  xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
+
+                <textarea name="text" rows="4" placeholder="Viết gì đó..."
+                          class="w-full border rounded p-3"
+                          th:text="${commentForm.text}"></textarea>
+                <p class="text-sm text-red-600"
+                   th:if="${#fields.hasErrors('commentForm.text')}"
+                   th:errors="${commentForm.text}">Lỗi</p>
+
+                <button class="px-4 py-2 bg-black text-white rounded-xl" type="submit">Gửi</button>
+            </form>
+
+            <div class="text-sm text-gray-500" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="isAnonymous()">
+                Vui lòng <a href="/login" class="underline">đăng nhập</a> để bình luận.
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

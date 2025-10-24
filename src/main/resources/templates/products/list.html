@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <!-- Tiêu đề + nút Thêm -->
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold">Sản phẩm</h1>
+        <a href="/products/new" class="px-4 py-2 bg-emerald-600 text-white rounded-xl" 
+           xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('ADMIN')">+ Thêm sản phẩm</a>
+    </div>
+
+    <!-- Flash messages (nếu có) -->
+    <div th:if="${success}" class="mb-3 text-green-700 bg-green-50 border border-green-200 rounded p-3"
+         th:text="${success}"></div>
+    <div th:if="${error}" class="mb-3 text-red-700 bg-red-50 border border-red-200 rounded p-3"
+         th:text="${error}"></div>
+
+    <!-- Grid danh sách sản phẩm -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="p : ${productPage.content}" class="bg-white rounded-2xl shadow p-4 flex flex-col">
+            <div class="flex-1">
+                <h2 class="font-semibold text-lg" th:text="${p.name}">Tên SP</h2>
+                <p class="text-gray-600 mt-1">
+                    Giá: <span th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
+                </p>
+                <div class="mt-1">
+                    <span th:classappend="${p.inStock} ? 'text-green-600' : 'text-red-600'"
+                          th:text="${p.inStock} ? 'Còn hàng' : 'Hết hàng'">Trạng thái</span>
+                    <span class="ml-2 text-gray-500">SL tồn: <span th:text="${p.stock} ?: 0">0</span></span>
+                </div>
+            </div>
+
+            <a th:href="@{'/products/' + ${p.id}}"
+               class="mt-4 inline-block text-center px-4 py-2 rounded-xl bg-black text-white">
+                Xem chi tiết
+            </a>
+
+            <!-- Nút Sửa / Xoá -->
+            <div class="mt-2 flex gap-2">
+                <a th:href="@{'/products/' + ${p.id} + '/edit'}" class="px-3 py-1 rounded border"
+                   xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('ADMIN')">Sửa</a>
+
+                <form th:action="@{'/products/' + ${p.id} + '/delete'}" method="post"
+                      onsubmit="return confirm('Xoá sản phẩm này?');"
+                      xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('ADMIN')">
+                    <button class="px-3 py-1 rounded border border-red-600 text-red-600">Xoá</button>
+                </form>
+
+                <a th:href="@{'/orders/new'(productId=${p.id})}"
+                   class="px-3 py-1 rounded bg-blue-600 text-white"
+                   xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
+                    Mua nhanh
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-8 flex items-center justify-center gap-2" th:if="${productPage.totalPages} > 1">
+        <a class="px-3 py-2 border rounded"
+           th:classappend="${productPage.first} ? 'opacity-40 pointer-events-none'"
+           th:href="@{/products(page=${productPage.number-1},size=${productPage.size},q=${q})}">«</a>
+
+        <a th:each="i : ${#numbers.sequence(0, productPage.totalPages-1)}"
+           th:text="${i+1}"
+           th:href="@{/products(page=${i},size=${productPage.size},q=${q})}"
+           class="px-3 py-2 border rounded"
+           th:classappend="${i} == ${productPage.number} ? ' bg-black text-white' : ''"></a>
+
+        <a class="px-3 py-2 border rounded"
+           th:classappend="${productPage.last} ? 'opacity-40 pointer-events-none'"
+           th:href="@{/products(page=${productPage.number+1},size=${productPage.size},q=${q})}">»</a>
+    </div>
+</section>
+</body>
+</html>

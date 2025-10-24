@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold">Đơn hàng #<span th:text="${order.id}">1</span></h1>
+        <a href="/orders" class="px-4 py-2 border rounded">← Danh sách</a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-4 mb-6">
+        <p>Ngày: <span th:text="${order.date}">2025-01-01</span></p>
+        <p>Khách hàng: <span th:text="${order.customer != null ? order.customer.name : 'N/A'}">Khách</span></p>
+    </div>
+
+    <h2 class="font-semibold mb-3">Các dòng hàng</h2>
+    <table class="w-full bg-white rounded-xl shadow overflow-hidden">
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="text-left px-4 py-2">Sản phẩm</th>
+            <th class="text-left px-4 py-2">Số lượng</th>
+            <th class="text-left px-4 py-2">Giá mua</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${order.orderLines}">
+            <td class="px-4 py-2" th:text="${l.product != null ? l.product.name : 'N/A'}">SP</td>
+            <td class="px-4 py-2" th:text="${l.amount}">1</td>
+            <td class="px-4 py-2" th:text="${#numbers.formatDecimal(l.purchasePrice,0,'COMMA',0,'POINT')}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
+

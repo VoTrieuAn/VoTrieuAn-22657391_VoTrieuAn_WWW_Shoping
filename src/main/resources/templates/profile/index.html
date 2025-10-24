@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Hồ sơ người dùng</h1>
+
+    <div th:if="${success}" class="mb-3 px-4 py-3 rounded bg-green-100 text-green-700" th:text="${success}"></div>
+    <div th:if="${error}" class="mb-3 px-4 py-3 rounded bg-red-100 text-red-600" th:text="${error}"></div>
+
+    <div class="bg-white rounded-xl shadow p-4 space-y-2">
+        <p>Tên đăng nhập: <b th:text="${username}">user</b></p>
+        <p>Quyền: <span th:each="r : ${roles}" th:text="${r}" class="mr-2 inline-block px-2 py-0.5 bg-gray-100 rounded">ROLE</span></p>
+        <div sec:authorize="hasRole('CUSTOMER')">
+            <p>Mã khách hàng: <span th:text="${customerId} ?: 'N/A'"></span></p>
+            <a th:if="${customerId != null}" th:href="@{'/customers/' + ${customerId} + '/orders'}" class="underline">Lịch sử mua hàng của tôi</a>
+            <div class="pt-3">
+                <a href="/profile/edit" class="inline-block px-4 py-2 border rounded hover:bg-gray-50">Chỉnh sửa hồ sơ</a>
+            </div>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')">
+            <a href="/customers" class="underline">Quản trị khách hàng</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

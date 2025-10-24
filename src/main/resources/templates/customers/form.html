@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section class="max-w-xl mx-auto">
+    <h2 class="text-2xl font-bold mb-4" th:text="${customer.id} != null ? 'Sửa khách hàng' : 'Thêm khách hàng'">Form</h2>
+    <form th:action="${customer.id} != null ? @{'/customers/' + ${customer.id}} : @{/customers}" method="post" class="bg-white rounded-xl shadow p-4 space-y-4">
+        <div>
+            <label class="block mb-2">Tên</label>
+            <input type="text" name="name" class="w-full border rounded p-2" th:value="${customer.name}" required/>
+        </div>
+        <div>
+            <label class="block mb-2">Từ ngày</label>
+            <input type="date" name="customerSince" class="w-full border rounded p-2" th:value="${customer.customerSince}"/>
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" class="px-4 py-2 bg-black text-white rounded">Lưu</button>
+            <a href="/customers" class="px-4 py-2 border rounded">Huỷ</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>
+

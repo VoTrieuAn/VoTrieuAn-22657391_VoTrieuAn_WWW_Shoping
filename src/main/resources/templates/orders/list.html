@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold">Đơn hàng</h1>
+        <a href="/orders/new" class="px-4 py-2 bg-black text-white rounded" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">+ Tạo đơn</a>
+    </div>
+
+    <table class="w-full bg-white rounded-xl shadow overflow-hidden">
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="text-left px-4 py-2">ID</th>
+            <th class="text-left px-4 py-2">Ngày</th>
+            <th class="text-left px-4 py-2">Khách hàng</th>
+            <th class="text-left px-4 py-2">Số dòng</th>
+            <th class="text-left px-4 py-2">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td class="px-4 py-2" th:text="${o.id}">1</td>
+            <td class="px-4 py-2" th:text="${o.date}">2025-01-01</td>
+            <td class="px-4 py-2" th:text="${o.customer != null ? o.customer.name : 'N/A'}">Khách</td>
+            <td class="px-4 py-2" th:text="${#lists.size(o.orderLines)}">1</td>
+            <td class="px-4 py-2">
+                <a th:href="@{'/orders/' + ${o.id}}" class="px-3 py-1 border rounded">Chi tiết</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
+

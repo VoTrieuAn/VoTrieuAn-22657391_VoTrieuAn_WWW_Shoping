@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold">Khách hàng</h1>
+        <a href="/customers/new" class="px-4 py-2 bg-black text-white rounded" sec:authorize="hasRole('ADMIN')">+ Thêm</a>
+    </div>
+
+    <div th:if="${success}" class="mb-3 text-green-700 bg-green-50 border border-green-200 rounded p-3" th:text="${success}"></div>
+    <div th:if="${error}" class="mb-3 text-red-700 bg-red-50 border border-red-200 rounded p-3" th:text="${error}"></div>
+
+    <table class="w-full bg-white rounded-xl shadow overflow-hidden">
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="text-left px-4 py-2">ID</th>
+            <th class="text-left px-4 py-2">Tên</th>
+            <th class="text-left px-4 py-2">Từ ngày</th>
+            <th class="text-left px-4 py-2">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c: ${customers}">
+            <td class="px-4 py-2" th:text="${c.id}">1</td>
+            <td class="px-4 py-2" th:text="${c.name}">Tên</td>
+            <td class="px-4 py-2" th:text="${c.customerSince}">2025-01-01</td>
+            <td class="px-4 py-2">
+                <a th:href="@{'/customers/' + ${c.id} + '/edit'}" class="px-3 py-1 border rounded">Sửa</a>
+                <form th:action="@{'/customers/' + ${c.id} + '/delete'}" method="post" class="inline"
+                      onsubmit="return confirm('Xoá khách hàng này?');">
+                    <button class="px-3 py-1 border rounded border-red-600 text-red-600">Xoá</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
+

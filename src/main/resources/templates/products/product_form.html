@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section class="max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold" th:text="${product} != null ? 'Sửa sản phẩm' : 'Thêm sản phẩm'">Form</h1>
+        <a href="/products" class="px-4 py-2 bg-gray-200 rounded-xl">← Quay lại</a>
+    </div>
+
+    <form th:action="${product} != null ? @{'/products/' + ${product.id}} : @{/products}"
+          method="post"
+          th:object="${productForm}"
+          class="bg-white rounded-2xl shadow p-6 space-y-4">
+
+        <div>
+            <label class="block font-medium mb-1">Tên sản phẩm</label>
+            <input type="text" th:field="*{name}" class="w-full border rounded px-3 py-2"
+                   placeholder="Nhập tên"/>
+            <p class="text-sm text-red-600" th:if="${#fields.hasErrors('name')}"
+               th:errors="*{name}">Error</p>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Giá</label>
+            <input type="number" step="0.01" th:field="*{price}" class="w-full border rounded px-3 py-2"
+                   placeholder="0"/>
+            <p class="text-sm text-red-600" th:if="${#fields.hasErrors('price')}"
+               th:errors="*{price}">Error</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <input type="checkbox" th:field="*{inStock}" class="h-4 w-4">
+            <label>Còn hàng</label>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Số lượng tồn kho</label>
+            <input type="number" min="0" th:field="*{stock}" class="w-full border rounded px-3 py-2" placeholder="0"/>
+            <p class="text-sm text-red-600" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}">Error</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button class="px-4 py-2 bg-black text-white rounded-xl" type="submit"
+                    th:text="${product} != null ? 'Lưu thay đổi' : 'Tạo mới'">
+                Lưu
+            </button>
+            <a href="/products" class="px-4 py-2 bg-gray-200 rounded-xl">Huỷ</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>
