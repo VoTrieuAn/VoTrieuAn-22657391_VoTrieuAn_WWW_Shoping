@@ -6,24 +6,24 @@
 <section class="max-w-lg mx-auto bg-white rounded-xl shadow p-6 space-y-4">
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-semibold">Chỉnh sửa hồ sơ</h1>
-        <a href="/profile" class="text-sm underline">Quay lại hồ sơ</a>
+        <a href="/profile" class="text-sm underline text-blue-400">Quay lại hồ sơ</a>
     </div>
 
     <form th:action="@{/profile/edit}" method="post" th:object="${profileForm}" class="space-y-4">
         <div>
             <label class="block text-sm font-medium mb-1" for="username">Tên đăng nhập</label>
-            <input id="username" type="text" th:field="*{username}" class="w-full border rounded px-3 py-2"/>
+            <input id="username" type="text" th:field="*{username}" class="w-full border rounded px-3 py-2 outline-blue-300"/>
             <p class="text-sm text-red-600 mt-1" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
             <p class="text-xs text-gray-500 mt-1">Sau khi đổi, bạn cần dùng tên mới để đăng nhập lần sau.</p>
         </div>
 
         <div>
             <label class="block text-sm font-medium mb-1" for="customerSince">Ngày tham gia</label>
-            <input id="customerSince" type="date" th:field="*{customerSince}" class="w-full border rounded px-3 py-2"/>
+            <input id="customerSince" type="date" th:field="*{customerSince}" class="w-full border rounded px-3 py-2 outline-blue-300"/>
             <p class="text-sm text-red-600 mt-1" th:if="${#fields.hasErrors('customerSince')}" th:errors="*{customerSince}"></p>
         </div>
 
-        <button type="submit" class="w-full py-2 bg-black text-white rounded hover:bg-gray-800">
+        <button type="submit" class="w-full py-2 bg-blue-400 text-white rounded hover:bg-blue-300">
             Lưu thay đổi
         </button>
     </form>

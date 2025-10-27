@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section>
+    <div class="mb-4 flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Thanh toán</h1>
+        <a href="/cart" class="px-3 py-2 border border-blue-400 rounded">← Quay lại giỏ hàng</a>
+    </div>
+
+    <div th:if="${error}" class="mb-3 text-red-700 bg-red-50 border border-red-200 rounded p-3" th:text="${error}"></div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2 bg-white rounded-xl shadow p-4">
+            <h2 class="font-semibold mb-3">Thông tin nhận hàng (fake)</h2>
+            <p class="text-sm text-gray-500 mb-4">Dùng để demo, không lưu vào cơ sở dữ liệu.</p>
+            <form th:action="@{/cart/checkout}" method="post" class="space-y-3">
+                <div>
+                    <label class="block text-sm text-gray-600">Họ và tên</label>
+                    <input name="fullName" placeholder="Nguyễn Văn A" class="w-full border outline-blue-300 rounded px-3 py-2" />
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm text-gray-600">Số điện thoại</label>
+                        <input name="phone" placeholder="0901234567" class="w-full border outline-blue-300 rounded px-3 py-2" />
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600">Email</label>
+                        <input name="email" placeholder="a@example.com" class="w-full border outline-blue-300 rounded px-3 py-2" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600">Địa chỉ</label>
+                    <input name="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" class="w-full border outline-blue-300 rounded px-3 py-2" />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-600">Ghi chú</label>
+                    <textarea name="note" rows="3" class="w-full border outline-blue-300 rounded px-3 py-2" placeholder="Giao giờ hành chính..."></textarea>
+                </div>
+                <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-blue-400 text-white rounded" type="submit">Đặt hàng</button>
+                    <a href="/cart" class="px-4 py-2 border border-blue-400 rounded">Hủy</a>
+                </div>
+            </form>
+        </div>
+
+        <aside class="bg-white rounded-xl shadow p-4">
+            <h2 class="font-semibold mb-3">Tóm tắt đơn hàng</h2>
+            <div class="space-y-2">
+                <div th:each="item : ${items}" class="flex items-center justify-between text-sm">
+                    <span th:text="${item.name} + ' x ' + ${item.quantity}">SP x SL</span>
+                    <span th:text="${#numbers.formatDecimal(item.lineTotal, 0, 'COMMA', 0, 'POINT')}">0</span>
+                </div>
+            </div>
+            <div class="mt-3 border-t pt-3 flex items-center justify-between font-semibold">
+                <span>Tổng cộng</span>
+                <span class="text-red-400" th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')}">0</span>
+            </div>
+        </aside>
+    </div>
+</section>
+</body>
+</html>
+

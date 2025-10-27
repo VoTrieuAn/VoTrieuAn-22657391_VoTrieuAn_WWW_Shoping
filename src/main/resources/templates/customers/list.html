@@ -5,7 +5,7 @@
 <section>
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-2xl font-bold">Khách hàng</h1>
-        <a href="/customers/new" class="px-4 py-2 bg-black text-white rounded" sec:authorize="hasRole('ADMIN')">+ Thêm</a>
+        <a href="/customers/new" class="px-4 py-2 bg-blue-400 text-white rounded" sec:authorize="hasRole('ADMIN')">+ Thêm</a>
     </div>
 
     <div th:if="${success}" class="mb-3 text-green-700 bg-green-50 border border-green-200 rounded p-3" th:text="${success}"></div>
@@ -26,7 +26,7 @@
             <td class="px-4 py-2" th:text="${c.name}">Tên</td>
             <td class="px-4 py-2" th:text="${c.customerSince}">2025-01-01</td>
             <td class="px-4 py-2">
-                <a th:href="@{'/customers/' + ${c.id} + '/edit'}" class="px-3 py-1 border rounded">Sửa</a>
+                <a th:href="@{'/customers/' + ${c.id} + '/edit'}" class="px-3 py-1 border border-blue-400 rounded">Sửa</a>
                 <form th:action="@{'/customers/' + ${c.id} + '/delete'}" method="post" class="inline"
                       onsubmit="return confirm('Xoá khách hàng này?');">
                     <button class="px-3 py-1 border rounded border-red-600 text-red-600">Xoá</button>

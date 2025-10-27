@@ -1,6 +1,5 @@
 package fit.iuh.springdatathemleafshopping.controller;
 
-import fit.iuh.springdatathemleafshopping.enitity.Customer;
 import fit.iuh.springdatathemleafshopping.enitity.dto.ProfileForm;
 import fit.iuh.springdatathemleafshopping.repository.CustomerRepository;
 import jakarta.validation.Valid;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,9 +30,9 @@ public class ProfileController {
     @GetMapping("/profile")
     public String profile(Authentication auth, Model model){
         if (auth != null){
-            List<String> roles = auth.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.toList());
-            String username = auth.getName();
-            Optional<Customer> customerOpt = customerRepository.findByName(username);
+            var roles = auth.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.toList());
+            var username = auth.getName();
+            var customerOpt = customerRepository.findByName(username);
             customerOpt.ifPresent(c -> model.addAttribute("customerId", c.getId()));
             model.addAttribute("username", username);
             model.addAttribute("roles", roles);
@@ -49,14 +46,14 @@ public class ProfileController {
         if (auth == null){
             return "redirect:/login";
         }
-        String username = auth.getName();
-        Optional<Customer> customerOpt = customerRepository.findByName(username);
+        var username = auth.getName();
+        var customerOpt = customerRepository.findByName(username);
         if (customerOpt.isEmpty()){
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy thông tin khách hàng");
             return "redirect:/profile";
         }
         if (!model.containsAttribute("profileForm")){
-            Customer customer = customerOpt.get();
+            var customer = customerOpt.get();
             ProfileForm form = new ProfileForm();
             form.setUsername(username);
             form.setCustomerSince(customer.getCustomerSince());
@@ -74,14 +71,14 @@ public class ProfileController {
         if (auth == null){
             return "redirect:/login";
         }
-        String currentUsername = auth.getName();
-        Optional<Customer> customerOpt = customerRepository.findByName(currentUsername);
+        var currentUsername = auth.getName();
+        var customerOpt = customerRepository.findByName(currentUsername);
         if (customerOpt.isEmpty()){
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy thông tin khách hàng hiện tại");
             return "redirect:/profile";
         }
 
-        Customer customer = customerOpt.get();
+        var customer = customerOpt.get();
 
         if (!currentUsername.equals(form.getUsername()) && userDetailsManager.userExists(form.getUsername())){
             binding.rejectValue("username", "exists", "Tên đăng nhập đã được sử dụng");

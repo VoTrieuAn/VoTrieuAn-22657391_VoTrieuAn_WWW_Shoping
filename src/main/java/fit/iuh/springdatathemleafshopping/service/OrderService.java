@@ -3,12 +3,14 @@ package fit.iuh.springdatathemleafshopping.service;
 
 import fit.iuh.springdatathemleafshopping.enitity.Order;
 import fit.iuh.springdatathemleafshopping.enitity.OrderLine;
+import fit.iuh.springdatathemleafshopping.cart.CartItem;
 import fit.iuh.springdatathemleafshopping.repository.CustomerRepository;
 import fit.iuh.springdatathemleafshopping.repository.OrderRepository;
 import fit.iuh.springdatathemleafshopping.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +67,43 @@ public class OrderService {
 
     public Optional<Order> findById(Integer id){
         return orders.findById(id);
+    }
+
+    @Transactional
+    public Order createFromCart(Integer customerId, Collection<CartItem> items){
+        if (items == null || items.isEmpty()) {
+            throw new IllegalStateException("Giỏ hàng trống");
+        }
+        var customer = customers.findById(customerId).orElseThrow();
+
+        Order order = new Order();
+        order.setDate(LocalDate.now());
+        order.setCustomer(customer);
+
+        items.forEach(ci -> {
+            if (ci.getId() == null) throw new IllegalStateException("Thiếu mã sản phẩm");
+            Integer pid = ci.getId().intValue();
+            var product = products.findById(pid).orElseThrow();
+
+            int requested = Math.max(ci.getQuantity(), 0);
+            int stock = product.getStock() == null ? 0 : product.getStock();
+            if (!product.isInStock() || requested <= 0 || stock < requested){
+                throw new IllegalStateException("Sản phẩm " + product.getName() + " không đủ hàng");
+            }
+
+            OrderLine line = new OrderLine();
+            line.setOrder(order);
+            line.setProduct(product);
+            line.setAmount(requested);
+            line.setPurchasePrice(product.getPrice());
+            order.getOrderLines().add(line);
+
+            // Update stock
+            product.setStock(stock - requested);
+            if (product.getStock() <= 0) product.setInStock(false);
+            products.save(product);
+        });
+
+        return orders.save(order);
     }
 }

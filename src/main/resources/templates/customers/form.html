@@ -7,15 +7,15 @@
     <form th:action="${customer.id} != null ? @{'/customers/' + ${customer.id}} : @{/customers}" method="post" class="bg-white rounded-xl shadow p-4 space-y-4">
         <div>
             <label class="block mb-2">Tên</label>
-            <input type="text" name="name" class="w-full border rounded p-2" th:value="${customer.name}" required/>
+            <input type="text" name="name" class="w-full border border-blue-400 rounded p-2" th:value="${customer.name}" required/>
         </div>
         <div>
             <label class="block mb-2">Từ ngày</label>
-            <input type="date" name="customerSince" class="w-full border rounded p-2" th:value="${customer.customerSince}"/>
+            <input type="date" name="customerSince" class="w-full border border-blue-400 rounded p-2" th:value="${customer.customerSince}"/>
         </div>
         <div class="flex gap-2">
-            <button type="submit" class="px-4 py-2 bg-black text-white rounded">Lưu</button>
-            <a href="/customers" class="px-4 py-2 border rounded">Huỷ</a>
+            <button type="submit" class="px-4 py-2 bg-blue-400 text-white rounded">Lưu</button>
+            <a href="/customers" class="px-4 py-2 border border-red-400 rounded">Huỷ</a>
         </div>
     </form>
 </section>

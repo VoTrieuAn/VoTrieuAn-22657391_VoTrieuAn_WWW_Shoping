@@ -22,7 +22,7 @@
             <div class="flex-1">
                 <h2 class="font-semibold text-lg" th:text="${p.name}">Tên SP</h2>
                 <p class="text-gray-600 mt-1">
-                    Giá: <span th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
+                    Giá: <span class="text-red-400" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
                 </p>
                 <div class="mt-1">
                     <span th:classappend="${p.inStock} ? 'text-green-600' : 'text-red-600'"
@@ -32,13 +32,26 @@
             </div>
 
             <a th:href="@{'/products/' + ${p.id}}"
-               class="mt-4 inline-block text-center px-4 py-2 rounded-xl bg-black text-white">
+               class="mt-4 inline-block text-center px-4 py-2 rounded-xl bg-blue-400 text-white">
                 Xem chi tiết
             </a>
 
+            <!-- Thêm vào giỏ hàng -->
+            <form th:if="${p.inStock}" th:action="@{/cart/add}" method="post" class="mt-2" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="isAuthenticated()">
+                <input type="hidden" name="id" th:value="${p.id}"/>
+                <input type="hidden" name="name" th:value="${p.name}"/>
+                <input type="hidden" name="price" th:value="${p.price}"/>
+                <input type="hidden" name="redirect"
+                       th:value="@{/products(page=${productPage.number},size=${productPage.size},q=${q})}"/>
+                <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
+                <button class="w-full px-4 py-2 rounded-xl bg-emerald-600 text-white" type="submit">
+                    Thêm vào giỏ
+                </button>
+            </form>
+
             <!-- Nút Sửa / Xoá -->
             <div class="mt-2 flex gap-2">
-                <a th:href="@{'/products/' + ${p.id} + '/edit'}" class="px-3 py-1 rounded border"
+                <a th:href="@{'/products/' + ${p.id} + '/edit'}" class="px-3 py-1 rounded border border-blue-400"
                    xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasRole('ADMIN')">Sửa</a>
 
                 <form th:action="@{'/products/' + ${p.id} + '/delete'}" method="post"
@@ -47,7 +60,7 @@
                     <button class="px-3 py-1 rounded border border-red-600 text-red-600">Xoá</button>
                 </form>
 
-                <a th:href="@{'/orders/new'(productId=${p.id})}"
+                <a th:href="@{'/orders/new'(productId=${p.id}, quick=${true})}"
                    class="px-3 py-1 rounded bg-blue-600 text-white"
                    xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
                     Mua nhanh
@@ -66,7 +79,7 @@
            th:text="${i+1}"
            th:href="@{/products(page=${i},size=${productPage.size},q=${q})}"
            class="px-3 py-2 border rounded"
-           th:classappend="${i} == ${productPage.number} ? ' bg-black text-white' : ''"></a>
+           th:classappend="${i} == ${productPage.number} ? ' bg-blue-400 text-white' : ''"></a>
 
         <a class="px-3 py-2 border rounded"
            th:classappend="${productPage.last} ? 'opacity-40 pointer-events-none'"

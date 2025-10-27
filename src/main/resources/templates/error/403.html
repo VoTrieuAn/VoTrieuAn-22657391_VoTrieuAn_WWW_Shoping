@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<section class="max-w-xl mx-auto text-center">
+    <h1 class="text-3xl font-bold mb-3">403 - Không có quyền</h1>
+    <p class="text-gray-600" th:text="${message}">Bạn không có quyền truy cập trang này.</p>
+
+    <div class="mt-6 flex items-center justify-center gap-3">
+        <a href="/products" class="px-4 py-2 border rounded">Về trang sản phẩm</a>
+        <a href="/login" class="px-4 py-2 bg-black text-white rounded">Đăng nhập tài khoản khác</a>
+    </div>
+</section>
+</body>
+</html>
+
