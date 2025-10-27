@@ -1,6 +1,7 @@
 package fit.iuh.springdatathemleafshopping.controller;
 
 import fit.iuh.springdatathemleafshopping.cart.CartItem;
+import fit.iuh.springdatathemleafshopping.enitity.Order;
 import fit.iuh.springdatathemleafshopping.service.CartService;
 import fit.iuh.springdatathemleafshopping.service.OrderService;
 import fit.iuh.springdatathemleafshopping.repository.CustomerRepository;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public class CartController {
         }
         Integer cid = resolveCurrentCustomerId(auth);
         try {
-            var order = orderService.createFromCart(cid, cartService.findAll());
+            Order order = orderService.createFromCart(cid, cartService.findAll());
             cartService.clear();
             ra.addFlashAttribute("success", "Đặt hàng thành công");
             return "redirect:/orders/" + order.getId();
@@ -110,7 +112,7 @@ public class CartController {
         if (auth == null || !auth.isAuthenticated()) {
             return "redirect:/login";
         }
-        var items = cartService.findAll();
+        Collection<CartItem> items = cartService.findAll();
         if (items == null || items.isEmpty()) {
             ra.addFlashAttribute("error", "Giỏ hàng trống");
             return "redirect:/cart";
@@ -122,8 +124,8 @@ public class CartController {
     }
 
     private Integer resolveCurrentCustomerId(Authentication auth){
-        var username = auth != null ? auth.getName() : null;
-        var cid = customerRepository.findByName(username != null ? username : "customer")
+        String username = auth != null ? auth.getName() : null;
+        Integer cid = customerRepository.findByName(username != null ? username : "customer")
                 .map(c -> c.getId())
                 .orElseGet(() -> customerRepository.findAll().stream().findFirst().map(c -> c.getId()).orElse(null));
         if (cid == null) throw new IllegalStateException("No customer available to assign order");

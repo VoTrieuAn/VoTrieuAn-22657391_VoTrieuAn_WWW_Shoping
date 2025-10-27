@@ -5,7 +5,7 @@
 <section>
     <div class="flex items-center justify-between mb-4">
         <h1 class="text-2xl font-bold">Đơn hàng</h1>
-        <a href="/orders/new" class="px-4 py-2 bg-blue-400 text-white rounded" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">+ Tạo đơn</a>
+        <a href="/orders/new" class="px-4 py-2 bg-blue-400 text-white rounded" sec:authorize="hasAnyRole('ADMIN')">+ Tạo đơn</a>
     </div>
 
     <table class="w-full bg-white rounded-xl shadow overflow-hidden">

@@ -5,7 +5,7 @@
 <section class="max-w-2xl mx-auto">
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold">Sửa bình luận</h1>
-        <a th:href="@{'/products/' + ${comment.product.id}}" class="px-4 py-2 bg-gray-200 rounded-xl">← Quay lại</a>
+        <a th:href="@{'/products/' + ${comment.product.id}}" class="px-4 py-2 border border-blue-400 rounded-xl">← Quay lại</a>
     </div>
 
     <form th:action="@{'/comments/' + ${comment.id}}" method="post"
@@ -14,14 +14,14 @@
 
         <div>
             <label class="block font-medium mb-1">Nội dung</label>
-            <textarea rows="4" th:field="*{text}" class="w-full border rounded p-3"
+            <textarea rows="4" th:field="*{text}" class="w-full border outline-blue-300 rounded p-3"
                       placeholder="Nhập nội dung..."></textarea>
             <p class="text-sm text-red-600" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Lỗi</p>
         </div>
 
         <div class="flex items-center gap-3">
-            <button class="px-4 py-2 bg-black text-white rounded-xl" type="submit">Lưu</button>
-            <a th:href="@{'/products/' + ${comment.product.id}}" class="px-4 py-2 bg-gray-200 rounded-xl">Huỷ</a>
+            <button class="px-4 py-2 bg-blue-400 text-white rounded-xl" type="submit">Lưu</button>
+            <a th:href="@{'/products/' + ${comment.product.id}}" class="px-4 py-2 text-red-400 border border-red-400 rounded-xl">Huỷ</a>
         </div>
     </form>
 </section>

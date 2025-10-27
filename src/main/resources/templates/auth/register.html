@@ -4,32 +4,32 @@
       th:replace="~{fragments/layout :: layout(~{::body})}">
 <body>
 <section class="max-w-md mx-auto bg-white rounded-xl shadow p-6">
-    <h1 class="text-2xl font-semibold mb-4 text-center">Create Account</h1>
+    <h1 class="text-2xl font-semibold mb-4 text-center">Đăng ký</h1>
 
     <div th:if="${success}" class="mb-4 p-3 bg-green-100 text-green-700 rounded" th:text="${success}"></div>
 
     <form th:action="@{/register}" method="post" th:object="${registrationForm}" class="space-y-4">
         <div>
             <label class="block text-sm font-medium mb-1" for="username">Username</label>
-            <input id="username" type="text" th:field="*{username}" class="w-full border rounded px-3 py-2"/>
+            <input id="username" type="text" th:field="*{username}" class="w-full border outline-blue-300 rounded px-3 py-2"/>
             <p class="text-sm text-red-600 mt-1" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
         </div>
 
         <div>
             <label class="block text-sm font-medium mb-1" for="password">Password</label>
-            <input id="password" type="password" th:field="*{password}" class="w-full border rounded px-3 py-2"/>
+            <input id="password" type="password" th:field="*{password}" class="w-full border outline-blue-300 rounded px-3 py-2"/>
             <p class="text-sm text-red-600 mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
         </div>
 
         <div>
             <label class="block text-sm font-medium mb-1" for="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" type="password" th:field="*{confirmPassword}" class="w-full border rounded px-3 py-2"/>
+            <input id="confirmPassword" type="password" th:field="*{confirmPassword}" class="w-full border outline-blue-300 rounded px-3 py-2"/>
             <p class="text-sm text-red-600 mt-1" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
         </div>
 
         <p class="text-sm text-red-600" th:if="${#fields.hasGlobalErrors()}" th:errors="*{}"></p>
 
-        <button type="submit" class="w-full py-2 bg-black text-white rounded hover:bg-gray-800">Register</button>
+        <button type="submit" class="w-full py-2 bg-blue-400 text-white rounded hover:bg-gray-800">Đăng ký</button>
     </form>
 
     <p class="text-sm text-center mt-4">

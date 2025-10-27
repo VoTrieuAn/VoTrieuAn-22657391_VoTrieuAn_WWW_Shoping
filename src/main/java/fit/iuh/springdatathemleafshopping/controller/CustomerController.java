@@ -1,6 +1,7 @@
 package fit.iuh.springdatathemleafshopping.controller;
 
 import fit.iuh.springdatathemleafshopping.enitity.Customer;
+import fit.iuh.springdatathemleafshopping.enitity.Order;
 import fit.iuh.springdatathemleafshopping.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/customers")
@@ -39,14 +41,14 @@ public class CustomerController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model){
-        var c = customerRepository.findById(id).orElseThrow();
+        Customer c = customerRepository.findById(id).orElseThrow();
         model.addAttribute("customer", c);
         return "customers/form";
     }
 
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id, @ModelAttribute Customer form, RedirectAttributes ra){
-        var c = customerRepository.findById(id).orElseThrow();
+        Customer c = customerRepository.findById(id).orElseThrow();
         c.setName(form.getName());
         c.setCustomerSince(form.getCustomerSince());
         customerRepository.save(c);
@@ -68,7 +70,7 @@ public class CustomerController {
     // Xem lịch sử đơn hàng của khách hàng (ADMIN)
     @GetMapping("/{id}/orders")
     public String orders(@PathVariable Integer id, Model model){
-        var list = orderService.findByCustomer(id);
+        List<Order> list = orderService.findByCustomer(id);
         model.addAttribute("orders", list);
         return "orders/list";
     }

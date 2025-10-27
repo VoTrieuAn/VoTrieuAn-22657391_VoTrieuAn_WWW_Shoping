@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         @Bean
         public UserDetailsManager userDetailsManager(PasswordEncoder encoder) {
                 UserDetails admin = User.withUsername("admin")
-                                .password(encoder.encode("123"))
+                                .password(encoder.encode("111"))
                                 .roles("ADMIN")
                                 .build();
                 UserDetails customer = User.withUsername("customer")
@@ -41,27 +41,27 @@ public class SecurityConfiguration {
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**",
-                                                                "/images/**", "/resources/**")
-                                                .permitAll()
+                                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**",
+                                                        "/images/**", "/resources/**")
+                                        .permitAll()
 
-                                                .requestMatchers("/products/new", "/products/*/edit").hasRole("ADMIN")
-                                                .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
-                                                .requestMatchers(HttpMethod.POST, "/products/*").hasRole("ADMIN")
-                                                .requestMatchers(HttpMethod.POST, "/products/*/delete").hasRole("ADMIN")
+                                        .requestMatchers("/products/new", "/products/*/edit").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products/*").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products/*/delete").hasRole("ADMIN")
 
-                                                .requestMatchers("/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
-                                                .requestMatchers(HttpMethod.GET, "/cart/checkout").authenticated()
-                                                .requestMatchers(HttpMethod.POST, "/cart/checkout").authenticated()
-                                                .requestMatchers("/cart/**").permitAll()
-                                                .requestMatchers("/comments/**").hasAnyRole("CUSTOMER", "ADMIN")
-                                                .requestMatchers(HttpMethod.POST, "/products/*/comments")
-                                                .hasAnyRole("CUSTOMER", "ADMIN")
-                                                .requestMatchers("/customers/**").hasRole("ADMIN")
+                                        .requestMatchers("/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/cart/checkout").authenticated()
+                                        .requestMatchers(HttpMethod.POST, "/cart/checkout").authenticated()
+                                        .requestMatchers("/cart/**").permitAll()
+                                        .requestMatchers("/comments/**").hasAnyRole("CUSTOMER", "ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/products/*/comments")
+                                        .hasAnyRole("CUSTOMER", "ADMIN")
+                                        .requestMatchers("/customers/**").hasRole("ADMIN")
 
-                                                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
 
-                                                .anyRequest().authenticated())
+                                        .anyRequest().authenticated())
                                 .formLogin(form -> form
                                                 // .loginPage("/login")
                                                 .defaultSuccessUrl("/products", true)

@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <a href="/products" class="px-4 py-2 bg-gray-200 rounded-xl">← Quay lại</a>
+            <a href="/products" class="px-4 py-2 border border-blue-400 rounded-xl">← Quay lại</a>
             <a th:href="@{'/orders/new'(productId=${product.id}, quick=${true})}" class="px-4 py-2 bg-blue-600 text-white rounded-xl"
                xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
                 Mua sản phẩm này
@@ -47,7 +47,7 @@
 
                     <div class="mt-3 flex gap-2" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
                         <a th:href="@{'/comments/' + ${c.id} + '/edit'}"
-                           class="px-3 py-1 rounded border">Sửa</a>
+                           class="px-3 py-1 rounded border border-blue-400">Sửa</a>
 
                         <form th:action="@{'/comments/' + ${c.id} + '/delete'}" method="post"
                               onsubmit="return confirm('Xoá bình luận này?');">
@@ -72,13 +72,13 @@
                   xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="hasAnyRole('CUSTOMER','ADMIN')">
 
                 <textarea name="text" rows="4" placeholder="Viết gì đó..."
-                          class="w-full border rounded p-3"
+                          class="w-full border outline-blue-300 rounded p-3"
                           th:text="${commentForm.text}"></textarea>
                 <p class="text-sm text-red-600"
                    th:if="${#fields.hasErrors('commentForm.text')}"
                    th:errors="${commentForm.text}">Lỗi</p>
 
-                <button class="px-4 py-2 bg-black text-white rounded-xl" type="submit">Gửi</button>
+                <button class="px-4 py-2 bg-blue-400 text-white rounded-xl" type="submit">Gửi</button>
             </form>
 
             <div class="text-sm text-gray-500" xmlns:sec="https://www.thymeleaf.org/extras/spring-security" sec:authorize="isAnonymous()">
