@@ -24,9 +24,9 @@ public class ProductController {
 
     @GetMapping
     public String list(@RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "9") int size,
-                       @RequestParam(defaultValue = "") String q,
-                       Model model) {
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(defaultValue = "") String q,
+            Model model) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<Product> productPage = q.isBlank()
                 ? productRepository.findAll(pageable)
@@ -39,11 +39,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model,
-                         @ModelAttribute("commentForm") CommentForm form) {
+            @ModelAttribute("commentForm") CommentForm form) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         model.addAttribute("product", product);
-        if (form.getText() == null) model.addAttribute("commentForm", new CommentForm());
+        if (form.getText() == null)
+            model.addAttribute("commentForm", new CommentForm());
         return "products/detail";
     }
 
@@ -56,16 +57,18 @@ public class ProductController {
 
     @PostMapping
     public String create(@Valid @ModelAttribute("productForm") ProductForm form,
-                         BindingResult binding,
-                         RedirectAttributes ra) {
-        if (binding.hasErrors()) return "products/product_form";
+            BindingResult binding,
+            RedirectAttributes ra) {
+        if (binding.hasErrors())
+            return "products/product_form";
         Product p = Product.builder()
                 .name(form.getName())
                 .price(form.getPrice())
                 .inStock(form.isInStock())
                 .stock(form.getStock())
                 .build();
-        if (p.getStock() != null && p.getStock() == 0) p.setInStock(false);
+        if (p.getStock() != null && p.getStock() == 0)
+            p.setInStock(false);
         productRepository.save(p);
         ra.addFlashAttribute("success", "Đã thêm sản phẩm mới");
         return "redirect:/products";
@@ -88,10 +91,10 @@ public class ProductController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id,
-                         @Valid @ModelAttribute("productForm") ProductForm form,
-                         BindingResult binding,
-                         RedirectAttributes ra,
-                         Model model) {
+            @Valid @ModelAttribute("productForm") ProductForm form,
+            BindingResult binding,
+            RedirectAttributes ra,
+            Model model) {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         if (binding.hasErrors()) {
@@ -102,7 +105,8 @@ public class ProductController {
         p.setPrice(form.getPrice());
         p.setInStock(form.isInStock());
         p.setStock(form.getStock());
-        if (p.getStock() != null && p.getStock() == 0) p.setInStock(false);
+        if (p.getStock() != null && p.getStock() == 0)
+            p.setInStock(false);
         productRepository.save(p);
         ra.addFlashAttribute("success", "Đã cập nhật sản phẩm");
         return "redirect:/products";

@@ -41,34 +41,39 @@ public class SecurityConfiguration {
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**",
-                                                        "/images/**", "/resources/**")
-                                        .permitAll()
+                                                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**",
+                                                                "/images/**", "/resources/**")
+                                                .permitAll()
 
-                                        .requestMatchers("/products/new", "/products/*/edit").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/products/*").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/products/*/delete").hasRole("ADMIN")
+                                                // Chatbot API - permitAll and CSRF will be disabled for this
+                                                .requestMatchers("/api/chat/**").permitAll()
 
-                                        .requestMatchers("/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
-                                        .requestMatchers(HttpMethod.GET, "/cart/checkout").authenticated()
-                                        .requestMatchers(HttpMethod.POST, "/cart/checkout").authenticated()
-                                        .requestMatchers("/cart/**").permitAll()
-                                        .requestMatchers("/comments/**").hasAnyRole("CUSTOMER", "ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/products/*/comments")
-                                        .hasAnyRole("CUSTOMER", "ADMIN")
-                                        .requestMatchers("/customers/**").hasRole("ADMIN")
+                                                .requestMatchers("/products/new", "/products/*/edit").hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/products/*").hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/products/*/delete").hasRole("ADMIN")
 
-                                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                                                .requestMatchers("/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
+                                                .requestMatchers(HttpMethod.GET, "/cart/checkout").authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/cart/checkout").authenticated()
+                                                .requestMatchers("/cart/**").permitAll()
+                                                .requestMatchers("/comments/**").hasAnyRole("CUSTOMER", "ADMIN")
+                                                .requestMatchers(HttpMethod.POST, "/products/*/comments")
+                                                .hasAnyRole("CUSTOMER", "ADMIN")
+                                                .requestMatchers("/customers/**").hasRole("ADMIN")
 
-                                        .anyRequest().authenticated())
+                                                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+
+                                                .anyRequest().authenticated())
+                                .csrf(csrf -> csrf
+                                                .ignoringRequestMatchers("/api/chat/**") // Disable CSRF for chatbot API
+                                )
                                 .formLogin(form -> form
                                                 // .loginPage("/login")
                                                 .defaultSuccessUrl("/products", true)
                                                 .permitAll())
                                 .exceptionHandling(ex -> ex
-                                                .accessDeniedPage("/403")
-                                )
+                                                .accessDeniedPage("/403"))
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .logoutSuccessUrl("/login?logout=true")
